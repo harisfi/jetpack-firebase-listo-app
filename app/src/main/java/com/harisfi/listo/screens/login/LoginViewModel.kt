@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val accountService: AccountService,
 ) : ListoViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
@@ -45,6 +45,18 @@ class LoginViewModel @Inject constructor(
         launchCatching {
             accountService.authenticate(email, password)
             openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
+        }
+    }
+
+    fun onForgotPasswordClick() {
+        if (!email.isValidEmail()) {
+            SnackbarManager.showMessage(AppText.email_error)
+            return
+        }
+
+        launchCatching {
+            accountService.sendRecoveryEmail(email)
+            SnackbarManager.showMessage(AppText.recovery_email_sent)
         }
     }
 }

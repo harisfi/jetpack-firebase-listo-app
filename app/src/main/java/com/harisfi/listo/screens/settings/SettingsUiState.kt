@@ -1,4 +1,3 @@
 package com.harisfi.listo.screens.settings
 
-class SettingsUiState {
-}
+data class SettingsUiState(val isAnonymousAccount: Boolean = true)

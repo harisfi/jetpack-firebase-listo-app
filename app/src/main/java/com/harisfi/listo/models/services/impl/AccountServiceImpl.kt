@@ -12,6 +12,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
@@ -22,7 +23,7 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(it.uid) } ?: User())
+                    this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
                 }
             auth.addAuthStateListener(listener)
             awaitClose { auth.removeAuthStateListener(listener) }
@@ -32,11 +33,12 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    override suspend fun signOut() {
-        if (auth.currentUser!!.isAnonymous) {
-            auth.currentUser!!.delete()
-        }
-        auth.signOut()
+    override suspend fun sendRecoveryEmail(email: String) {
+        auth.sendPasswordResetEmail(email).await()
+    }
+
+    override suspend fun createAnonymousAccount() {
+        auth.signInAnonymously().await()
     }
 
     override suspend fun linkAccount(email: String, password: String): Unit =
@@ -44,6 +46,20 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
             val credential = EmailAuthProvider.getCredential(email, password)
             auth.currentUser!!.linkWithCredential(credential).await()
         }
+
+    override suspend fun deleteAccount() {
+        auth.currentUser!!.delete().await()
+    }
+
+    override suspend fun signOut() {
+        if (auth.currentUser!!.isAnonymous) {
+            auth.currentUser!!.delete()
+        }
+        auth.signOut()
+
+        // Sign the user back in anonymously.
+        createAnonymousAccount()
+    }
 
     companion object {
         private const val LINK_ACCOUNT_TRACE = "linkAccount"

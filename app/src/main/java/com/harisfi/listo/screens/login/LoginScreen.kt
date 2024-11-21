@@ -13,11 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.harisfi.listo.commons.composable.BasicButton
+import com.harisfi.listo.commons.composable.BasicTextButton
 import com.harisfi.listo.commons.composable.BasicToolbar
 import com.harisfi.listo.commons.composable.EmailField
 import com.harisfi.listo.commons.composable.PasswordField
 import com.harisfi.listo.commons.ext.basicButton
 import com.harisfi.listo.commons.ext.fieldModifier
+import com.harisfi.listo.commons.ext.textButton
 import com.harisfi.listo.ui.theme.ListoTheme
 import com.harisfi.listo.R.string as AppText
 
@@ -32,7 +34,8 @@ fun LoginScreen(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = { viewModel.onSignInClick(openAndPopUp) }
+        onSignInClick = { viewModel.onSignInClick(openAndPopUp) },
+        onForgotPasswordClick = viewModel::onForgotPasswordClick
     )
 }
 
@@ -42,7 +45,8 @@ fun LoginScreenContent(
     uiState: LoginUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     BasicToolbar(AppText.login_details)
 
@@ -58,6 +62,10 @@ fun LoginScreenContent(
         PasswordField(uiState.password, onPasswordChange, Modifier.fieldModifier())
 
         BasicButton(AppText.sign_in, Modifier.basicButton()) { onSignInClick() }
+
+        BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
+            onForgotPasswordClick()
+        }
     }
 }
 
@@ -73,7 +81,8 @@ fun LoginScreenPreview() {
             uiState = uiState,
             onEmailChange = { },
             onPasswordChange = { },
-            onSignInClick = { }
+            onSignInClick = { },
+            onForgotPasswordClick = { }
         )
     }
 }

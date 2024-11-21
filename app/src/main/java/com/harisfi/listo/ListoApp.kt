@@ -34,6 +34,7 @@ import com.harisfi.listo.screens.todos.TodosScreen
 import kotlinx.coroutines.CoroutineScope
 import com.harisfi.listo.commons.snackbar.SnackbarManager
 import com.harisfi.listo.screens.settings.SettingsScreen
+import com.harisfi.listo.screens.splash.SplashScreen
 import com.harisfi.listo.ui.theme.ListoTheme
 
 @Composable
@@ -61,10 +62,10 @@ fun ListoApp() {
             ) { innerPaddingModifier ->
                 NavHost(
                     navController = appState.navController,
-                    startDestination = LOGIN_SCREEN,
+                    startDestination = SPLASH_SCREEN,
                     modifier = Modifier.padding(innerPaddingModifier)
                 ) {
-                    listoGraph(appState)
+                    ListoGraph(appState)
                 }
             }
         }
@@ -84,7 +85,6 @@ fun RequestNotificationPermissionDialog() {
 }
 
 @Composable
-@OptIn(ExperimentalPermissionsApi::class)
 fun rememberAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberNavController(),
@@ -104,7 +104,11 @@ fun resources(): Resources {
 }
 
 @ExperimentalMaterialApi
-fun NavGraphBuilder.listoGraph(appState: ListoAppState) {
+fun NavGraphBuilder.ListoGraph(appState: ListoAppState) {
+    composable(SPLASH_SCREEN) {
+        SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    }
+
     composable(SETTINGS_SCREEN) {
         SettingsScreen(
             restartApp = { route -> appState.clearAndNavigate(route) },

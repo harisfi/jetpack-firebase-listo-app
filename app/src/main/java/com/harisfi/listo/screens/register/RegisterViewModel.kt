@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val accountService: AccountService,
 ) : ListoViewModel() {
     var uiState = mutableStateOf(RegisterUiState())
         private set
@@ -37,7 +37,7 @@ class RegisterViewModel @Inject constructor(
         uiState.value = uiState.value.copy(repeatPassword = newValue)
     }
 
-    fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
+    fun onRegisterClick(openAndPopUp: (String, String) -> Unit) {
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return

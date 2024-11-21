@@ -25,13 +25,14 @@ fun SettingsScreen(
     openScreen: (String) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState(initial = SettingsUiState())
+    val uiState by viewModel.uiState.collectAsState(initial = SettingsUiState(false))
 
     SettingsScreenContent(
         uiState = uiState,
         onLoginClick = { viewModel.onLoginClick(openScreen) },
         onSignUpClick = { viewModel.onSignUpClick(openScreen) },
-        onSignOutClick = { viewModel.onSignOutClick(restartApp) }
+        onSignOutClick = { viewModel.onSignOutClick(restartApp) },
+        onDeleteMyAccountClick = { viewModel.onDeleteMyAccountClick(restartApp) }
     )
 }
 
@@ -42,7 +43,8 @@ fun SettingsScreenContent(
     uiState: SettingsUiState,
     onLoginClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onSignOutClick: () -> Unit
+    onSignOutClick: () -> Unit,
+    onDeleteMyAccountClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -55,7 +57,18 @@ fun SettingsScreenContent(
 
         Spacer(modifier = Modifier.spacer())
 
-        SignOutCard { onSignOutClick() }
+        if (uiState.isAnonymousAccount) {
+            RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
+                onLoginClick()
+            }
+
+            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
+                onSignUpClick()
+            }
+        } else {
+            SignOutCard { onSignOutClick() }
+            DeleteMyAccountCard { onDeleteMyAccountClick() }
+        }
     }
 }
 
@@ -84,18 +97,49 @@ private fun SignOutCard(signOut: () -> Unit) {
     }
 }
 
+@ExperimentalMaterialApi
+@Composable
+private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    DangerousCardEditor(
+        AppText.delete_my_account,
+        AppIcon.ic_delete_my_account,
+        "",
+        Modifier.card()
+    ) {
+        showWarningDialog = true
+    }
+
+    if (showWarningDialog) {
+        AlertDialog(
+            title = { Text(stringResource(AppText.delete_account_title)) },
+            text = { Text(stringResource(AppText.delete_account_description)) },
+            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
+            confirmButton = {
+                DialogConfirmButton(AppText.delete_my_account) {
+                    deleteMyAccount()
+                    showWarningDialog = false
+                }
+            },
+            onDismissRequest = { showWarningDialog = false }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreenPreview() {
-    val uiState = SettingsUiState()
+    val uiState = SettingsUiState(isAnonymousAccount = false)
 
     ListoTheme {
         SettingsScreenContent(
             uiState = uiState,
             onLoginClick = { },
             onSignUpClick = { },
-            onSignOutClick = { }
+            onSignOutClick = { },
+            onDeleteMyAccountClick = { }
         )
     }
 }

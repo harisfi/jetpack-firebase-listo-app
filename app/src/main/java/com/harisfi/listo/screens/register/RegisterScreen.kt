@@ -26,7 +26,7 @@ fun RegisterScreen(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-        onSignUpClick = { viewModel.onSignUpClick(openAndPopUp) }
+        onRegisterClick = { viewModel.onRegisterClick(openAndPopUp) }
     )
 }
 
@@ -37,7 +37,7 @@ fun RegisterScreenContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRepeatPasswordChange: (String) -> Unit,
-    onSignUpClick: () -> Unit
+    onRegisterClick: () -> Unit
 ) {
     val fieldModifier = Modifier.fieldModifier()
 
@@ -56,7 +56,7 @@ fun RegisterScreenContent(
         RepeatPasswordField(uiState.repeatPassword, onRepeatPasswordChange, fieldModifier)
 
         BasicButton(AppText.create_account, Modifier.basicButton()) {
-            onSignUpClick()
+            onRegisterClick()
         }
     }
 }
@@ -74,7 +74,7 @@ fun RegisterScreenPreview() {
             onEmailChange = { },
             onPasswordChange = { },
             onRepeatPasswordChange = { },
-            onSignUpClick = { }
+            onRegisterClick = { }
         )
     }
 }
