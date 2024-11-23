@@ -1,10 +1,10 @@
 package com.harisfi.listo.screens.edit_todo
 
+import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,12 +21,9 @@ import com.harisfi.listo.commons.ext.toolbarActions
 import com.harisfi.listo.models.Priority
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.ui.theme.ListoTheme
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
+import java.util.Calendar
 
 @Composable
-@ExperimentalMaterialApi
 fun EditTodoScreen(
     popUpScreen: () -> Unit,
     viewModel: EditTodoViewModel = hiltViewModel()
@@ -49,7 +46,6 @@ fun EditTodoScreen(
 }
 
 @Composable
-@ExperimentalMaterialApi
 fun EditTodoScreenContent(
     modifier: Modifier = Modifier,
     todo: Todo,
@@ -92,7 +88,6 @@ fun EditTodoScreenContent(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun CardEditors(
     todo: Todo,
@@ -110,7 +105,6 @@ private fun CardEditors(
 }
 
 @Composable
-@ExperimentalMaterialApi
 private fun CardSelectors(
     todo: Todo,
     onPriorityChange: (String) -> Unit,
@@ -130,25 +124,41 @@ private fun CardSelectors(
 }
 
 private fun showDatePicker(activity: AppCompatActivity?, onDateChange: (Long) -> Unit) {
-    val picker = MaterialDatePicker.Builder.datePicker().build()
+    val calendar = Calendar.getInstance()
 
     activity?.let {
-        picker.show(it.supportFragmentManager, picker.toString())
-        picker.addOnPositiveButtonClickListener { timeInMillis -> onDateChange(timeInMillis) }
+        val datePicker = android.app.DatePickerDialog(
+            it,
+            { _, year, month, dayOfMonth ->
+                calendar.set(year, month, dayOfMonth)
+                onDateChange(calendar.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePicker.show()
     }
 }
 
 private fun showTimePicker(activity: AppCompatActivity?, onTimeChange: (Int, Int) -> Unit) {
-    val picker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).build()
+    val calendar = Calendar.getInstance()
 
     activity?.let {
-        picker.show(it.supportFragmentManager, picker.toString())
-        picker.addOnPositiveButtonClickListener { onTimeChange(picker.hour, picker.minute) }
+        val timePicker = TimePickerDialog(
+            it,
+            { _, hourOfDay, minute ->
+                onTimeChange(hourOfDay, minute)
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        )
+        timePicker.show()
     }
 }
 
 @Preview(showBackground = true)
-@ExperimentalMaterialApi
 @Composable
 fun EditTodoScreenPreview() {
     val todo = Todo(

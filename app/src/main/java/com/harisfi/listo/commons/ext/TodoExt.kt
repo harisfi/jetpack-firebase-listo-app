@@ -1,6 +1,5 @@
 package com.harisfi.listo.commons.ext
 
-import com.google.android.gms.tasks.Task
 import com.harisfi.listo.models.Todo
 
 fun Todo?.hasDueDate(): Boolean {

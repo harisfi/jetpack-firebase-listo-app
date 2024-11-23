@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.config.ktx)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,8 +73,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-    implementation(libs.material)
-    implementation(libs.androidx.material)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.firebase.analytics.ktx)
 }

@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
@@ -17,13 +16,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.R.string as AppText
 import com.harisfi.listo.commons.composable.ActionToolbar
-import com.harisfi.listo.commons.ext.smallSpacer
 import com.harisfi.listo.commons.ext.toolbarActions
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.ui.theme.ListoTheme
 
 @Composable
-@ExperimentalMaterialApi
 fun TodosScreen(
     openScreen: (String) -> Unit,
     viewModel: TodosViewModel = hiltViewModel()
@@ -46,7 +43,6 @@ fun TodosScreen(
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-@ExperimentalMaterialApi
 fun TodosScreenContent(
     modifier: Modifier = Modifier,
     todos: List<Todo>,
@@ -61,25 +57,31 @@ fun TodosScreenContent(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onAddClick(openScreen) },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = modifier.padding(16.dp)
             ) {
-                Icon(Icons.Filled.Add, "Add")
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add"
+                )
             }
         }
-    ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             ActionToolbar(
                 title = AppText.todos,
                 modifier = Modifier.toolbarActions(),
                 primaryActionIcon = AppIcon.ic_settings,
-                primaryAction = { onSettingsClick(openScreen) },
+                primaryAction = { onSettingsClick(openScreen) }
             )
 
-            Spacer(modifier = Modifier.smallSpacer())
+            Spacer(modifier = Modifier.height(8.dp))
 
             LazyColumn {
                 items(todos, key = { it.id }) { todoItem ->
@@ -96,7 +98,6 @@ fun TodosScreenContent(
 }
 
 @Preview(showBackground = true)
-@ExperimentalMaterialApi
 @Composable
 fun TodosScreenPreview() {
     val todo = Todo(

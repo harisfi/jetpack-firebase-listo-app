@@ -1,12 +1,8 @@
 package com.harisfi.listo
 
-import android.Manifest
 import android.content.res.Resources
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
@@ -21,12 +17,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
-import com.harisfi.listo.commons.composable.PermissionDialog
-import com.harisfi.listo.commons.composable.RationaleDialog
 import com.harisfi.listo.screens.edit_todo.EditTodoScreen
 import com.harisfi.listo.screens.login.LoginScreen
 import com.harisfi.listo.screens.register.RegisterScreen
@@ -38,27 +28,21 @@ import com.harisfi.listo.screens.splash.SplashScreen
 import com.harisfi.listo.ui.theme.ListoTheme
 
 @Composable
-@ExperimentalMaterialApi
 fun ListoApp() {
     ListoTheme {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RequestNotificationPermissionDialog()
-        }
-
-        Surface(color = MaterialTheme.colors.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             val appState = rememberAppState()
 
             Scaffold(
                 snackbarHost = {
                     SnackbarHost(
-                        hostState = it,
+                        hostState = appState.snackbarHostState,
                         modifier = Modifier.padding(8.dp),
                         snackbar = { snackbarData ->
-                            Snackbar(snackbarData, contentColor = MaterialTheme.colors.onPrimary)
+                            Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.onPrimary)
                         }
                     )
-                },
-                scaffoldState = appState.scaffoldState
+                }
             ) { innerPaddingModifier ->
                 NavHost(
                     navController = appState.navController,
@@ -72,28 +56,16 @@ fun ListoApp() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequestNotificationPermissionDialog() {
-    val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-
-    if (!permissionState.status.isGranted) {
-        if (permissionState.status.shouldShowRationale) RationaleDialog()
-        else PermissionDialog { permissionState.launchPermissionRequest() }
-    }
-}
-
 @Composable
 fun rememberAppState(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     navController: NavHostController = rememberNavController(),
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
-    remember(scaffoldState, navController, snackbarManager, resources, coroutineScope) {
-        ListoAppState(scaffoldState, navController, snackbarManager, resources, coroutineScope)
+    remember(snackbarHostState, navController, snackbarManager, resources, coroutineScope) {
+        ListoAppState(snackbarHostState, navController, snackbarManager, resources, coroutineScope)
     }
 
 @Composable
@@ -103,7 +75,6 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-@ExperimentalMaterialApi
 fun NavGraphBuilder.ListoGraph(appState: ListoAppState) {
     composable(SPLASH_SCREEN) {
         SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })

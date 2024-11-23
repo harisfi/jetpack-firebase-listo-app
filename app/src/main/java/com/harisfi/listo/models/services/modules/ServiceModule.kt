@@ -1,10 +1,8 @@
 package com.harisfi.listo.models.services.modules
 
 import com.harisfi.listo.models.services.AccountService
-import com.harisfi.listo.models.services.ConfigurationService
 import com.harisfi.listo.models.services.StorageService
 import com.harisfi.listo.models.services.impl.AccountServiceImpl
-import com.harisfi.listo.models.services.impl.ConfigurationServiceImpl
 import com.harisfi.listo.models.services.impl.StorageServiceImpl
 import dagger.Binds
 import dagger.Module
@@ -17,7 +15,4 @@ abstract class ServiceModule {
     @Binds abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
 
     @Binds abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
-
-    @Binds
-    abstract fun provideConfigurationService(impl: ConfigurationServiceImpl): ConfigurationService
 }

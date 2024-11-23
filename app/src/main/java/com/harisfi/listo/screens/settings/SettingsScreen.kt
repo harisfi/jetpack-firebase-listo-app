@@ -3,8 +3,7 @@ package com.harisfi.listo.screens.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +17,6 @@ import com.harisfi.listo.commons.ext.card
 import com.harisfi.listo.commons.ext.spacer
 import com.harisfi.listo.ui.theme.ListoTheme
 
-@ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
     restartApp: (String) -> Unit,
@@ -36,7 +34,6 @@ fun SettingsScreen(
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 fun SettingsScreenContent(
     modifier: Modifier = Modifier,
@@ -72,7 +69,6 @@ fun SettingsScreenContent(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun SignOutCard(signOut: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
@@ -97,7 +93,6 @@ private fun SignOutCard(signOut: () -> Unit) {
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
@@ -128,7 +123,6 @@ private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
 }
 
 @Preview(showBackground = true)
-@ExperimentalMaterialApi
 @Composable
 fun SettingsScreenPreview() {
     val uiState = SettingsUiState(isAnonymousAccount = false)

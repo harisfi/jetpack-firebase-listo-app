@@ -1,8 +1,7 @@
 package com.harisfi.listo.screens.todos
 
 import androidx.compose.foundation.layout.*
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import com.harisfi.listo.ui.theme.DarkOrange
 import java.lang.StringBuilder
 
 @Composable
-@ExperimentalMaterialApi
 fun TodoItem(
     todo: Todo,
     options: List<String>,
@@ -28,7 +26,6 @@ fun TodoItem(
     onActionClick: (String) -> Unit
 ) {
     Card(
-        backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
     ) {
         Row(
@@ -42,9 +39,17 @@ fun TodoItem(
             )
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = todo.title, style = MaterialTheme.typography.subtitle2)
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(text = getDueDateAndTime(todo), fontSize = 12.sp)
+                Text(
+                    text = todo.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)) { // Adjust alpha as needed
+                    Text(
+                        text = getDueDateAndTime(todo),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp
+                    )
                 }
             }
 

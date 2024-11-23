@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Listo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Listo" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_orange</item>
-        <item name="colorPrimaryVariant">@color/medium_orange</item>
-        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/bright_orange</item>
-        <item name="colorSecondaryVariant">@color/bright_orange</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorAccent">@color/bright_orange</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
-        <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >@color/bright_orange</item>
+        <item name="android:navigationBarColor">@color/bright_orange</item>
         <!-- Customize your theme here. -->
     </style>
 

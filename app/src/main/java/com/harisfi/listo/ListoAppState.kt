@@ -8,12 +8,11 @@ import com.harisfi.listo.commons.snackbar.SnackbarMessage.Companion.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.ScaffoldState
+import androidx.compose.material3.*
 
 @Stable
 class ListoAppState(
-    val scaffoldState: ScaffoldState,
+    val snackbarHostState: SnackbarHostState,
     val navController: NavHostController,
     private val snackbarManager: SnackbarManager,
     private val resources: Resources,
@@ -23,7 +22,7 @@ class ListoAppState(
         coroutineScope.launch {
             snackbarManager.snackbarMessages.filterNotNull().collect { snackbarMessage ->
                 val text = snackbarMessage.toMessage(resources)
-                scaffoldState.snackbarHostState.showSnackbar(text)
+                snackbarHostState.showSnackbar(text)
                 snackbarManager.clearSnackbarState()
             }
         }

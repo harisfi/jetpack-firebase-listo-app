@@ -5,7 +5,6 @@ import com.harisfi.listo.EDIT_TODO_SCREEN
 import com.harisfi.listo.SETTINGS_SCREEN
 import com.harisfi.listo.TODO_ID
 import com.harisfi.listo.models.Todo
-import com.harisfi.listo.models.services.ConfigurationService
 import com.harisfi.listo.models.services.StorageService
 import com.harisfi.listo.screens.ListoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,15 +13,13 @@ import javax.inject.Inject
 @HiltViewModel
 class TodosViewModel @Inject constructor(
     private val storageService: StorageService,
-    private val configurationService: ConfigurationService
 ) : ListoViewModel() {
     val options = mutableStateOf<List<String>>(listOf())
 
     val todos = storageService.todos
 
     fun loadTodoOptions() {
-        val hasEditOption = configurationService.isShowTodoEditButtonConfig
-        options.value = TodoActionOption.getOptions(hasEditOption)
+        options.value = TodoActionOption.getOptions(true)
     }
 
     fun onTodoCheckChange(todo: Todo) {

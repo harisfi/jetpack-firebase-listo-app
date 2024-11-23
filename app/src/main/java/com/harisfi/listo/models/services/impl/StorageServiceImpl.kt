@@ -87,7 +87,5 @@ class StorageServiceImpl @Inject constructor(
         private const val FLAG_FIELD = "flag"
         private const val CREATED_AT_FIELD = "createdAt"
         private const val TODO_COLLECTION = "todos"
-        private const val SAVE_TODO_TRACE = "saveTodo"
-        private const val UPDATE_TODO_TRACE = "updateTodo"
     }
 }
