@@ -9,6 +9,7 @@
     <string name="cancel">Cancel</string>
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
+    <string name="title_error">Please insert a title.</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
@@ -27,7 +28,7 @@
     <string name="todos">Todos</string>
 
     <!-- EditTodoScreen -->
-    <string name="edit_todo">Edit your todo</string>
+    <string name="edit_todo">Todo detail</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="url">URL</string>

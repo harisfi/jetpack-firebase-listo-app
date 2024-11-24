@@ -10,15 +10,5 @@ enum class TodoActionOption(val title: String) {
 
             return EditTodo
         }
-
-        fun getOptions(hasEditOption: Boolean): List<String> {
-            val options = mutableListOf<String>()
-            values().forEach { todoAction ->
-                if (hasEditOption || todoAction != EditTodo) {
-                    options.add(todoAction.title)
-                }
-            }
-            return options
-        }
     }
 }

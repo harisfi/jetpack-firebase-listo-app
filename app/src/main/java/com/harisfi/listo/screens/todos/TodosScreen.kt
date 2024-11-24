@@ -19,8 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.R.string as AppText
-import com.harisfi.listo.commons.composable.ActionToolbar
-import com.harisfi.listo.commons.ext.toolbarActions
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.ui.theme.ListoTheme
 
@@ -86,7 +84,7 @@ fun TodosScreenContent(
                 Text(
                     text = stringResource(AppText.app_name),
                     style = MaterialTheme.typography.titleLarge,
-                    fontSize = 24.sp
+                    fontSize = 32.sp
                 )
 
                 FilledTonalIconButton(onClick = { onSettingsClick(openScreen) }) {

@@ -2,8 +2,11 @@ package com.harisfi.listo.screens.edit_todo
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
+import com.harisfi.listo.R
 import com.harisfi.listo.TODO_ID
 import com.harisfi.listo.commons.ext.idFromParameter
+import com.harisfi.listo.commons.ext.isValidEmail
+import com.harisfi.listo.commons.snackbar.SnackbarManager
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.models.services.StorageService
 import com.harisfi.listo.screens.ListoViewModel
@@ -35,8 +38,14 @@ class EditTodoViewModel @Inject constructor(
     }
 
     fun onDoneClick(popUpScreen: () -> Unit) {
+        val editedTodo = todo.value
+
+        if (editedTodo.title.isBlank()) {
+            SnackbarManager.showMessage(R.string.email_error)
+            return
+        }
+
         launchCatching {
-            val editedTodo = todo.value
             if (editedTodo.id.isBlank()) {
                 storageService.save(editedTodo)
             } else {

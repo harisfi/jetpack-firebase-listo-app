@@ -73,7 +73,7 @@ fun RegisterScreenContent(
             Text(
                 text = stringResource(AppText.create_account),
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 24.sp
+                fontSize = 32.sp
             )
 
             Text(
@@ -81,7 +81,7 @@ fun RegisterScreenContent(
                 style = MaterialTheme.typography.bodySmall,
                 fontSize = 12.sp
             )
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(46.dp))
         }
 
         EmailField(uiState.email, onEmailChange, fieldModifier)

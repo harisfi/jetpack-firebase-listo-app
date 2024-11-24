@@ -77,7 +77,7 @@ fun LoginScreenContent(
             Text(
                 text = stringResource(AppText.sign_in),
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 24.sp
+                fontSize = 32.sp
             )
 
             Text(
@@ -85,7 +85,7 @@ fun LoginScreenContent(
                 style = MaterialTheme.typography.bodySmall,
                 fontSize = 12.sp
             )
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(46.dp))
         }
 
         EmailField(uiState.email, onEmailChange, Modifier.fieldModifier())

@@ -21,7 +21,6 @@ import com.harisfi.listo.R.string as AppText
 import com.harisfi.listo.commons.composable.*
 import com.harisfi.listo.commons.ext.fieldModifier
 import com.harisfi.listo.commons.ext.spacer
-import com.harisfi.listo.commons.ext.toolbarActions
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.ui.theme.ListoTheme
 
@@ -66,7 +65,7 @@ fun EditTodoScreenContent(
             Text(
                 text = stringResource(AppText.edit_todo),
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 24.sp
+                fontSize = 32.sp
             )
 
             FilledTonalIconButton(onClick = { onDoneClick() }) {
@@ -82,7 +81,7 @@ fun EditTodoScreenContent(
 
         val fieldModifier = Modifier.fieldModifier()
         BasicField(AppText.title, todo.title, onTitleChange, fieldModifier)
-        BasicField(AppText.description, todo.description, onDescriptionChange, fieldModifier)
+        Textarea(AppText.description, todo.description, onDescriptionChange, fieldModifier)
         Spacer(modifier = Modifier.spacer())
     }
 }

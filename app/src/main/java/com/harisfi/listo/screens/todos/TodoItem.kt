@@ -34,7 +34,7 @@ fun TodoItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = todo.title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)) { // Adjust alpha as needed

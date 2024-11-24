@@ -63,7 +63,7 @@ fun SettingsScreenContent(
             Text(
                 text = stringResource(AppText.settings),
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 24.sp
+                fontSize = 32.sp
             )
 
             Spacer(Modifier.height(32.dp))
