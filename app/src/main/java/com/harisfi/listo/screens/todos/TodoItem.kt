@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.models.Todo
-import com.harisfi.listo.ui.theme.DarkOrange
 
 @Composable
 fun TodoItem(
@@ -52,7 +51,7 @@ fun TodoItem(
             ) {
                 Icon(
                     painter = painterResource(AppIcon.ic_edit),
-                    tint = DarkOrange,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "Edit"
                 )
             }
@@ -62,7 +61,7 @@ fun TodoItem(
             ) {
                 Icon(
                     painter = painterResource(AppIcon.ic_delete),
-                    tint = DarkOrange,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "Flag"
                 )
             }
