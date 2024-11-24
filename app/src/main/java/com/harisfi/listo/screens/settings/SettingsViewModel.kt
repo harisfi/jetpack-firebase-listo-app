@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.map
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val storageService: StorageService
 ) : ListoViewModel() {
     val uiState = accountService.currentUser.map { SettingsUiState(it.isAnonymous) }
 

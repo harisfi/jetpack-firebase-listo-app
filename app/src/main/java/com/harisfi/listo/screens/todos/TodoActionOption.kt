@@ -2,7 +2,6 @@ package com.harisfi.listo.screens.todos
 
 enum class TodoActionOption(val title: String) {
     EditTodo("Edit todo"),
-    ToggleFlag("Toggle flag"),
     DeleteTodo("Delete todo");
 
     companion object {

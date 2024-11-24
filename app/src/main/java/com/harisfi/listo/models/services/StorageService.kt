@@ -10,6 +10,4 @@ interface StorageService {
     suspend fun update(todo: Todo)
     suspend fun delete(todoId: String)
     suspend fun getCompletedTodosCount(): Int
-    suspend fun getImportantCompletedTodosCount(): Int
-    suspend fun getMediumHighTodosToCompleteCount(): Int
 }

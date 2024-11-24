@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.harisfi.listo.commons.ext.dropdownSelector
 
 @Composable
 fun DangerousCardEditor(
@@ -63,23 +62,5 @@ private fun CardEditor(
 
             Icon(painter = painterResource(icon), contentDescription = "Icon", tint = highlightColor)
         }
-    }
-}
-
-@Composable
-fun CardSelector(
-    @StringRes label: Int,
-    options: List<String>,
-    selection: String,
-    modifier: Modifier,
-    onNewValue: (String) -> Unit
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimary
-        )
-    ) {
-        DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
     }
 }

@@ -1,6 +1,5 @@
 package com.harisfi.listo.screens.todos
 
-import androidx.compose.runtime.mutableStateOf
 import com.harisfi.listo.EDIT_TODO_SCREEN
 import com.harisfi.listo.SETTINGS_SCREEN
 import com.harisfi.listo.TODO_ID
@@ -14,13 +13,7 @@ import javax.inject.Inject
 class TodosViewModel @Inject constructor(
     private val storageService: StorageService,
 ) : ListoViewModel() {
-    val options = mutableStateOf<List<String>>(listOf())
-
     val todos = storageService.todos
-
-    fun loadTodoOptions() {
-        options.value = TodoActionOption.getOptions(true)
-    }
 
     fun onTodoCheckChange(todo: Todo) {
         launchCatching { storageService.update(todo.copy(completed = !todo.completed)) }
@@ -33,13 +26,8 @@ class TodosViewModel @Inject constructor(
     fun onTodoActionClick(openScreen: (String) -> Unit, todo: Todo, action: String) {
         when (TodoActionOption.getByTitle(action)) {
             TodoActionOption.EditTodo -> openScreen("$EDIT_TODO_SCREEN?$TODO_ID={${todo.id}}")
-            TodoActionOption.ToggleFlag -> onFlagTodoClick(todo)
             TodoActionOption.DeleteTodo -> onDeleteTodoClick(todo)
         }
-    }
-
-    private fun onFlagTodoClick(todo: Todo) {
-        launchCatching { storageService.update(todo.copy(flag = !todo.flag)) }
     }
 
     private fun onDeleteTodoClick(todo: Todo) {

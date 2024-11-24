@@ -10,18 +10,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.harisfi.listo.R.drawable as AppIcon
-import com.harisfi.listo.commons.composable.DropdownContextMenu
-import com.harisfi.listo.commons.ext.contextMenu
-import com.harisfi.listo.commons.ext.hasDueDate
-import com.harisfi.listo.commons.ext.hasDueTime
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.ui.theme.DarkOrange
-import java.lang.StringBuilder
 
 @Composable
 fun TodoItem(
     todo: Todo,
-    options: List<String>,
     onCheckChange: () -> Unit,
     onActionClick: (String) -> Unit
 ) {
@@ -46,38 +40,32 @@ fun TodoItem(
 
                 CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)) { // Adjust alpha as needed
                     Text(
-                        text = getDueDateAndTime(todo),
+                        text = if (todo.description.length > 64) todo.description.take(64) + "..." else todo.description,
                         style = MaterialTheme.typography.bodySmall,
                         fontSize = 12.sp
                     )
                 }
             }
 
-            if (todo.flag) {
+            IconButton(
+                onClick = { onActionClick("Edit todo") }
+            ) {
                 Icon(
-                    painter = painterResource(AppIcon.ic_flag),
+                    painter = painterResource(AppIcon.ic_edit),
+                    tint = DarkOrange,
+                    contentDescription = "Edit"
+                )
+            }
+
+            IconButton(
+                onClick = { onActionClick("Delete todo") }
+            ) {
+                Icon(
+                    painter = painterResource(AppIcon.ic_delete),
                     tint = DarkOrange,
                     contentDescription = "Flag"
                 )
             }
-
-            DropdownContextMenu(options, Modifier.contextMenu(), onActionClick)
         }
     }
-}
-
-private fun getDueDateAndTime(todo: Todo): String {
-    val stringBuilder = StringBuilder("")
-
-    if (todo.hasDueDate()) {
-        stringBuilder.append(todo.dueDate)
-        stringBuilder.append(" ")
-    }
-
-    if (todo.hasDueTime()) {
-        stringBuilder.append("at ")
-        stringBuilder.append(todo.dueTime)
-    }
-
-    return stringBuilder.toString()
 }

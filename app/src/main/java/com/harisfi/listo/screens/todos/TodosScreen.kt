@@ -26,11 +26,9 @@ fun TodosScreen(
     viewModel: TodosViewModel = hiltViewModel()
 ) {
     val todos = viewModel.todos.collectAsStateWithLifecycle(emptyList())
-    val options by viewModel.options
 
     TodosScreenContent(
         todos = todos.value,
-        options = options,
         onAddClick = viewModel::onAddClick,
         onSettingsClick = viewModel::onSettingsClick,
         onTodoCheckChange = viewModel::onTodoCheckChange,
@@ -38,7 +36,7 @@ fun TodosScreen(
         openScreen = openScreen
     )
 
-    LaunchedEffect(viewModel) { viewModel.loadTodoOptions() }
+    LaunchedEffect(viewModel) { }
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -46,7 +44,6 @@ fun TodosScreen(
 fun TodosScreenContent(
     modifier: Modifier = Modifier,
     todos: List<Todo>,
-    options: List<String>,
     onAddClick: ((String) -> Unit) -> Unit,
     onSettingsClick: ((String) -> Unit) -> Unit,
     onTodoCheckChange: (Todo) -> Unit,
@@ -87,7 +84,6 @@ fun TodosScreenContent(
                 items(todos, key = { it.id }) { todoItem ->
                     TodoItem(
                         todo = todoItem,
-                        options = options,
                         onCheckChange = { onTodoCheckChange(todoItem) },
                         onActionClick = { action -> onTodoActionClick(openScreen, todoItem, action) }
                     )
@@ -102,16 +98,12 @@ fun TodosScreenContent(
 fun TodosScreenPreview() {
     val todo = Todo(
         title = "Todo title",
-        flag = true,
         completed = true
     )
-
-    val options = TodoActionOption.getOptions(hasEditOption = true)
 
     ListoTheme {
         TodosScreenContent(
             todos = listOf(todo),
-            options = options,
             onAddClick = { },
             onSettingsClick = { },
             onTodoCheckChange = { },

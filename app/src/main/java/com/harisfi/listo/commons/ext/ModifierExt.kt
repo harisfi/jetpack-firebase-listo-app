@@ -17,18 +17,6 @@ fun Modifier.card(): Modifier {
     return this.padding(16.dp, 0.dp, 16.dp, 8.dp)
 }
 
-fun Modifier.contextMenu(): Modifier {
-    return this.wrapContentWidth()
-}
-
-fun Modifier.alertDialog(): Modifier {
-    return this.wrapContentWidth().wrapContentHeight()
-}
-
-fun Modifier.dropdownSelector(): Modifier {
-    return this.fillMaxWidth()
-}
-
 fun Modifier.fieldModifier(): Modifier {
     return this.fillMaxWidth().padding(16.dp, 4.dp)
 }

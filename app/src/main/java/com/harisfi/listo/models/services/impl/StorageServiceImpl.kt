@@ -4,12 +4,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
-import com.harisfi.listo.models.Priority
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.models.services.AccountService
 import com.harisfi.listo.models.services.StorageService
 import com.google.firebase.firestore.AggregateSource
-import com.google.firebase.firestore.Filter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -44,8 +42,7 @@ class StorageServiceImpl @Inject constructor(
             return firestore.collection(TODO_COLLECTION).add(updatedTask).await().id
         }
 
-    override suspend fun update(todo: Todo): Unit {
-
+    override suspend fun update(todo: Todo) {
         firestore.collection(TODO_COLLECTION).document(todo.id).set(todo).await()
     }
 
@@ -58,33 +55,9 @@ class StorageServiceImpl @Inject constructor(
         return query.get(AggregateSource.SERVER).await().count.toInt()
     }
 
-    override suspend fun getImportantCompletedTodosCount(): Int {
-        val query = collection.where(
-            Filter.and(
-                Filter.equalTo(COMPLETED_FIELD, true),
-                Filter.or(
-                    Filter.equalTo(PRIORITY_FIELD, Priority.High.name),
-                    Filter.equalTo(FLAG_FIELD, true)
-                )
-            )
-        )
-
-        return query.count().get(AggregateSource.SERVER).await().count.toInt()
-    }
-
-    override suspend fun getMediumHighTodosToCompleteCount(): Int {
-        val query = collection
-            .whereEqualTo(COMPLETED_FIELD, false)
-            .whereIn(PRIORITY_FIELD, listOf(Priority.Medium.name, Priority.High.name)).count()
-
-        return query.get(AggregateSource.SERVER).await().count.toInt()
-    }
-
     companion object {
         private const val USER_ID_FIELD = "userId"
         private const val COMPLETED_FIELD = "completed"
-        private const val PRIORITY_FIELD = "priority"
-        private const val FLAG_FIELD = "flag"
         private const val CREATED_AT_FIELD = "createdAt"
         private const val TODO_COLLECTION = "todos"
     }

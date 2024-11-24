@@ -8,8 +8,6 @@ import com.harisfi.listo.models.Todo
 import com.harisfi.listo.models.services.StorageService
 import com.harisfi.listo.screens.ListoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,31 +34,6 @@ class EditTodoViewModel @Inject constructor(
         todo.value = todo.value.copy(description = newValue)
     }
 
-    fun onUrlChange(newValue: String) {
-        todo.value = todo.value.copy(url = newValue)
-    }
-
-    fun onDateChange(newValue: Long) {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC))
-        calendar.timeInMillis = newValue
-        val newDueDate = SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(calendar.time)
-        todo.value = todo.value.copy(dueDate = newDueDate)
-    }
-
-    fun onTimeChange(hour: Int, minute: Int) {
-        val newDueTime = "${hour.toClockPattern()}:${minute.toClockPattern()}"
-        todo.value = todo.value.copy(dueTime = newDueTime)
-    }
-
-    fun onFlagToggle(newValue: String) {
-        val newFlagOption = EditFlagOption.getBooleanValue(newValue)
-        todo.value = todo.value.copy(flag = newFlagOption)
-    }
-
-    fun onPriorityChange(newValue: String) {
-        todo.value = todo.value.copy(priority = newValue)
-    }
-
     fun onDoneClick(popUpScreen: () -> Unit) {
         launchCatching {
             val editedTodo = todo.value
@@ -71,14 +44,5 @@ class EditTodoViewModel @Inject constructor(
             }
             popUpScreen()
         }
-    }
-
-    private fun Int.toClockPattern(): String {
-        return if (this < 10) "0$this" else "$this"
-    }
-
-    companion object {
-        private const val UTC = "UTC"
-        private const val DATE_FORMAT = "EEE, d MMM yyyy"
     }
 }
