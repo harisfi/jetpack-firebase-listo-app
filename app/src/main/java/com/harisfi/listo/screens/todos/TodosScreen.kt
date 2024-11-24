@@ -8,9 +8,13 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.harisfi.listo.R.drawable as AppIcon
@@ -71,14 +75,30 @@ fun TodosScreenContent(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            ActionToolbar(
-                title = AppText.todos,
-                modifier = Modifier.toolbarActions(),
-                primaryActionIcon = AppIcon.ic_settings,
-                primaryAction = { onSettingsClick(openScreen) }
-            )
+            Spacer(Modifier.height(32.dp))
+            Row(
+                modifier = Modifier
+                    .padding(12.dp, 0.dp, 12.dp, 0.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(AppText.app_name),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 24.sp
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                FilledTonalIconButton(onClick = { onSettingsClick(openScreen) }) {
+                    Icon(
+                        painter = painterResource(AppIcon.ic_settings),
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "Settings"
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(32.dp))
 
             LazyColumn {
                 items(todos, key = { it.id }) { todoItem ->

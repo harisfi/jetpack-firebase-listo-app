@@ -7,13 +7,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.R.string as AppText
 import com.harisfi.listo.commons.composable.*
 import com.harisfi.listo.commons.ext.card
+import com.harisfi.listo.commons.ext.fieldModifier
 import com.harisfi.listo.commons.ext.spacer
 import com.harisfi.listo.ui.theme.ListoTheme
 
@@ -50,9 +54,20 @@ fun SettingsScreenContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BasicToolbar(AppText.settings)
+        Column(
+            modifier = Modifier.fieldModifier(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Spacer(Modifier.height(32.dp))
 
-        Spacer(modifier = Modifier.spacer())
+            Text(
+                text = stringResource(AppText.settings),
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 24.sp
+            )
+
+            Spacer(Modifier.height(32.dp))
+        }
 
         if (uiState.isAnonymousAccount) {
             RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {

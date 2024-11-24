@@ -23,7 +23,7 @@ fun TodoItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
         ) {
             Checkbox(
                 checked = todo.completed,

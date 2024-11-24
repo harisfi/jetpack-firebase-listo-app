@@ -47,16 +47,4 @@ class LoginViewModel @Inject constructor(
             openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
         }
     }
-
-    fun onForgotPasswordClick() {
-        if (!email.isValidEmail()) {
-            SnackbarManager.showMessage(AppText.email_error)
-            return
-        }
-
-        launchCatching {
-            accountService.sendRecoveryEmail(email)
-            SnackbarManager.showMessage(AppText.recovery_email_sent)
-        }
-    }
 }
