@@ -10,6 +10,7 @@
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
     <string name="title_error">Please insert a title.</string>
+    <string name="open_camera">Open Camera</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>

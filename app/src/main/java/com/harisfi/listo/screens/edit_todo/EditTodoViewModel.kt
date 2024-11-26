@@ -2,10 +2,10 @@ package com.harisfi.listo.screens.edit_todo
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
+import com.harisfi.listo.CAMERA_SCREEN
 import com.harisfi.listo.R
 import com.harisfi.listo.TODO_ID
 import com.harisfi.listo.commons.ext.idFromParameter
-import com.harisfi.listo.commons.ext.isValidEmail
 import com.harisfi.listo.commons.snackbar.SnackbarManager
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.models.services.StorageService
@@ -13,7 +13,7 @@ import com.harisfi.listo.screens.ListoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel()
 class EditTodoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val storageService: StorageService,
@@ -53,5 +53,11 @@ class EditTodoViewModel @Inject constructor(
             }
             popUpScreen()
         }
+    }
+
+    fun onOpenCameraClick(
+        openScreen: (String) -> Unit
+    ) {
+        openScreen(CAMERA_SCREEN)
     }
 }

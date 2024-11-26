@@ -2,7 +2,12 @@ package com.harisfi.listo
 
 import android.content.res.Resources
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
@@ -11,24 +16,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.harisfi.listo.commons.snackbar.SnackbarManager
+import com.harisfi.listo.screens.SharedViewModel
+import com.harisfi.listo.screens.camera.CameraScreen
 import com.harisfi.listo.screens.edit_todo.EditTodoScreen
 import com.harisfi.listo.screens.login.LoginScreen
 import com.harisfi.listo.screens.register.RegisterScreen
-import com.harisfi.listo.screens.todos.TodosScreen
-import kotlinx.coroutines.CoroutineScope
-import com.harisfi.listo.commons.snackbar.SnackbarManager
 import com.harisfi.listo.screens.settings.SettingsScreen
 import com.harisfi.listo.screens.splash.SplashScreen
+import com.harisfi.listo.screens.todos.TodosScreen
 import com.harisfi.listo.ui.theme.ListoTheme
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun ListoApp() {
+fun ListoApp(
+    sharedViewModel: SharedViewModel = hiltViewModel()
+) {
     ListoTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             val appState = rememberAppState()
@@ -39,7 +49,10 @@ fun ListoApp() {
                         hostState = appState.snackbarHostState,
                         modifier = Modifier.padding(8.dp),
                         snackbar = { snackbarData ->
-                            Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.onPrimary)
+                            Snackbar(
+                                snackbarData,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     )
                 }
@@ -49,7 +62,7 @@ fun ListoApp() {
                     startDestination = SPLASH_SCREEN,
                     modifier = Modifier.padding(innerPaddingModifier)
                 ) {
-                    ListoGraph(appState)
+                    ListoGraph(appState, sharedViewModel)
                 }
             }
         }
@@ -75,7 +88,7 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-fun NavGraphBuilder.ListoGraph(appState: ListoAppState) {
+fun NavGraphBuilder.ListoGraph(appState: ListoAppState, sharedViewModel: SharedViewModel) {
     composable(SPLASH_SCREEN) {
         SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
@@ -97,6 +110,8 @@ fun NavGraphBuilder.ListoGraph(appState: ListoAppState) {
 
     composable(TODOS_SCREEN) { TodosScreen(openScreen = { route -> appState.navigate(route) }) }
 
+    composable(CAMERA_SCREEN) { CameraScreen(popUpScreen = { appState.popUp() }, sharedViewModel) }
+
     composable(
         route = "$EDIT_TODO_SCREEN$TODO_ID_ARG",
         arguments = listOf(navArgument(TODO_ID) {
@@ -105,7 +120,9 @@ fun NavGraphBuilder.ListoGraph(appState: ListoAppState) {
         })
     ) {
         EditTodoScreen(
-            popUpScreen = { appState.popUp() }
+            popUpScreen = { appState.popUp() },
+            openScreen = { route -> appState.navigate(route) },
+            sharedViewModel
         )
     }
 }

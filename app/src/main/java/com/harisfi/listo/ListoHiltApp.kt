@@ -4,4 +4,4 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ListoHiltApp : Application() {}
+class ListoHiltApp : Application()

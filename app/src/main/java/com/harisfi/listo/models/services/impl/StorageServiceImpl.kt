@@ -29,6 +29,7 @@ class StorageServiceImpl @Inject constructor(
                 firestore
                     .collection(TODO_COLLECTION)
                     .whereEqualTo(USER_ID_FIELD, user.id)
+                    .orderBy(COMPLETED_FIELD, Query.Direction.ASCENDING)
                     .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
                     .dataObjects()
             }
