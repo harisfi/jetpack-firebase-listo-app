@@ -1,25 +1,37 @@
 package com.harisfi.listo.screens.settings
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.harisfi.listo.R.drawable as AppIcon
-import com.harisfi.listo.R.string as AppText
-import com.harisfi.listo.commons.composable.*
+import com.harisfi.listo.commons.composable.DangerousCardEditor
+import com.harisfi.listo.commons.composable.DialogCancelButton
+import com.harisfi.listo.commons.composable.DialogConfirmButton
+import com.harisfi.listo.commons.composable.RegularCardEditor
 import com.harisfi.listo.commons.ext.card
 import com.harisfi.listo.commons.ext.fieldModifier
-import com.harisfi.listo.commons.ext.spacer
 import com.harisfi.listo.ui.theme.ListoTheme
+import com.harisfi.listo.R.drawable as AppIcon
+import com.harisfi.listo.R.string as AppText
 
 @Composable
 fun SettingsScreen(
@@ -74,7 +86,12 @@ fun SettingsScreenContent(
                 onLoginClick()
             }
 
-            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
+            RegularCardEditor(
+                AppText.create_account,
+                AppIcon.ic_create_account,
+                "",
+                Modifier.card()
+            ) {
                 onSignUpClick()
             }
         } else {

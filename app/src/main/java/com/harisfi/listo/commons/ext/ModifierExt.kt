@@ -1,7 +1,6 @@
 package com.harisfi.listo.commons.ext
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -15,12 +14,4 @@ fun Modifier.card(): Modifier {
 
 fun Modifier.fieldModifier(): Modifier {
     return this.fillMaxWidth().padding(16.dp, 4.dp)
-}
-
-fun Modifier.toolbarActions(): Modifier {
-    return this.wrapContentSize(Alignment.TopEnd)
-}
-
-fun Modifier.spacer(): Modifier {
-    return this.fillMaxWidth().padding(12.dp)
 }

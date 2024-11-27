@@ -1,6 +1,7 @@
 package com.harisfi.listo
 
 import android.content.res.Resources
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import com.harisfi.listo.commons.snackbar.SnackbarManager
@@ -8,9 +9,6 @@ import com.harisfi.listo.commons.snackbar.SnackbarMessage.Companion.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import androidx.compose.material3.*
-import androidx.navigation.NavBackStackEntry
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Stable
 class ListoAppState(

@@ -82,11 +82,11 @@ class StorageServiceImpl @Inject constructor(
 
             val callback = object : UploadCallback {
                 override fun onStart(requestId: String) {
-                    Log.d("Cloudinary Quickstart", "Upload start")
+                    Log.d("Cloudinary", "Upload start")
                 }
 
                 override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {
-                    Log.d("Cloudinary Quickstart", "Upload progress")
+                    Log.d("Cloudinary", "Upload progress")
                 }
 
                 override fun onSuccess(requestId: String, resultData: Map<*, *>) {
@@ -101,7 +101,9 @@ class StorageServiceImpl @Inject constructor(
                 override fun onReschedule(requestId: String, error: ErrorInfo) {}
             }
 
-            MediaManager.get().upload(uri.path).unsigned(Helper.getConfigValue(context, "upload_preset")!!).callback(callback).dispatch()
+            MediaManager.get().upload(uri.path)
+                .unsigned(Helper.getConfigValue(context, "upload_preset")!!).callback(callback)
+                .dispatch()
         }
 
     companion object {

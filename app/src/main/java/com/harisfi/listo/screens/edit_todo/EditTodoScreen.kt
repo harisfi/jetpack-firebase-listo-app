@@ -112,7 +112,6 @@ fun EditTodoScreenContent(
 
     val context = LocalContext.current
 
-    // Define the launcher within the Composable
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->

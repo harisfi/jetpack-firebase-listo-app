@@ -1,7 +1,6 @@
 package com.harisfi.listo.screens.camera
 
 import android.content.Context
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -71,7 +70,6 @@ fun CameraScreenContent(
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(factory = { previewView }, modifier = Modifier.weight(1f))
 
-        // Capture button
         Button(
             onClick = {
                 takePhoto(imageCapture, cameraExecutor) { file ->
@@ -97,10 +95,6 @@ private fun takePhoto(
 
     imageCapture.takePicture(outputOptions, executor, object : ImageCapture.OnImageSavedCallback {
         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-            Log.d("ccccccccccccccccccccccccccccccc", photoFile.toURI().toString())
-            Log.d("ccccccccccccccccccccccccccccccc", photoFile.exists().toString())
-            val file = File(photoFile.toURI().toString())
-            Log.d("ccccccccccccccccccccccccccccccc", file.exists().toString())
             onImageSaved(photoFile)
         }
 

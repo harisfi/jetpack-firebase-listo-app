@@ -90,9 +90,7 @@ class EditTodoViewModel @Inject constructor(
         }
     }
 
-    fun onOpenCameraClick(
-        openScreen: (String) -> Unit
-    ) {
+    fun onOpenCameraClick(openScreen: (String) -> Unit) {
         openScreen(CAMERA_SCREEN)
     }
 }

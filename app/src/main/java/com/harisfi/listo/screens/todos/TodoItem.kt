@@ -1,14 +1,24 @@
 package com.harisfi.listo.screens.todos
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,8 +31,8 @@ import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.models.Todo
+import com.harisfi.listo.R.drawable as AppIcon
 
 @Composable
 fun TodoItem(
@@ -39,7 +49,9 @@ fun TodoItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
         ) {
             Checkbox(
                 checked = todo.completed,
@@ -49,19 +61,31 @@ fun TodoItem(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = if (todo.title.length > 64) todo.title.take(32) + "..." else todo.title,
+                    text =
+                    if (todo.title.length > 64) todo.title.take(32) + "..."
+                    else todo.title,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    textDecoration = if (todo.completed) TextDecoration.LineThrough else TextDecoration.None
+                    textDecoration =
+                    if (todo.completed) TextDecoration.LineThrough
+                    else TextDecoration.None
                 )
 
                 if (todo.description.isNotEmpty()) {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)) { // Adjust alpha as needed
+                    CompositionLocalProvider(
+                        LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.6f
+                        )
+                    ) { // Adjust alpha as needed
                         Text(
-                            text = if (todo.description.length > 64) todo.description.take(64) + "..." else todo.description,
+                            text =
+                            if (todo.description.length > 64) todo.description.take(64) + "..."
+                            else todo.description,
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 12.sp,
-                            textDecoration = if (todo.completed) TextDecoration.LineThrough else TextDecoration.None
+                            textDecoration =
+                            if (todo.completed) TextDecoration.LineThrough
+                            else TextDecoration.None
                         )
                     }
                 }

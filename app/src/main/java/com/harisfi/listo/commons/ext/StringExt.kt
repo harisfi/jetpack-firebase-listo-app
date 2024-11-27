@@ -1,6 +1,5 @@
 package com.harisfi.listo.commons.ext
 
-
 import android.util.Patterns
 import java.util.regex.Pattern
 
