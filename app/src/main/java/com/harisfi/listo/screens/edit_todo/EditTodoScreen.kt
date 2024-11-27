@@ -3,7 +3,10 @@ package com.harisfi.listo.screens.edit_todo
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -61,12 +66,18 @@ fun EditTodoScreen(
     val todo by viewModel.todo
     val imageFile by sharedViewModel.imageFile
     val context = LocalContext.current
+    val isLoading by viewModel.isLoading
 
     val onDoneClick: () -> Unit = {
         coroutineScope.launch {
             viewModel.onDoneClick(popUpScreen, context)
             sharedViewModel.setCapturedImageFile(null)
         }
+    }
+
+    val onRemoveImageClick: () -> Unit = {
+        sharedViewModel.setCapturedImageFile(null)
+        viewModel.onImageRemove()
     }
 
     EditTodoScreenContent(
@@ -76,7 +87,9 @@ fun EditTodoScreen(
         onTitleChange = viewModel::onTitleChange,
         onDescriptionChange = viewModel::onDescriptionChange,
         onOpenCameraClick = { viewModel.onOpenCameraClick(openScreen) },
-        onImageChange = viewModel::onImageChange
+        onImageChange = viewModel::onImageChange,
+        isLoading = isLoading,
+        onRemoveImageClick = onRemoveImageClick
     )
 }
 
@@ -89,7 +102,9 @@ fun EditTodoScreenContent(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onOpenCameraClick: () -> Unit,
-    onImageChange: (File) -> Unit
+    onImageChange: (File) -> Unit,
+    isLoading: Boolean,
+    onRemoveImageClick: () -> Unit
 ) {
     val imageLoader = LocalContext.current.imageLoader.newBuilder()
         .logger(DebugLogger())
@@ -150,10 +165,17 @@ fun EditTodoScreenContent(
 
         if (imageFile != null || todo.imgUrl.isNotEmpty()) {
             Row(
+                modifier = Modifier
+                    .padding(12.dp, 0.dp, 12.dp, 0.dp)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.padding(12.dp).height(64.dp).width(64.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .height(64.dp)
+                        .width(64.dp)
+                        .border(1.dp, MaterialTheme.colorScheme.onBackground)
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -174,13 +196,34 @@ fun EditTodoScreenContent(
                         cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
                     }
                     BasicButton(AppText.remove_picture, Modifier.basicButton()) {
-                        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                        onRemoveImageClick()
                     }
                 }
             }
         } else {
             BasicButton(AppText.add_picture, Modifier.basicButton()) {
                 cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    if (isLoading) {
+        Box(
+            modifier = modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Gray.copy(alpha = 0.5f))
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+                Text(text = "Loading...")
             }
         }
     }
@@ -202,7 +245,9 @@ fun EditTodoScreenPreview() {
             onTitleChange = { },
             onDescriptionChange = { },
             onOpenCameraClick = { },
-            onImageChange = { }
+            onImageChange = { },
+            isLoading = false,
+            onRemoveImageClick = { }
         )
     }
 }

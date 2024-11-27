@@ -1,5 +1,6 @@
 package com.harisfi.listo.screens.todos
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -66,18 +67,26 @@ fun TodoItem(
                 }
 
                 if (todo.imgUrl.isNotEmpty()) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(todo.imgUrl)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Todo Image",
-                        placeholder = painterResource(AppIcon.ic_image),
-                        error = painterResource(AppIcon.ic_broken_image),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.clip(RectangleShape).size(64.dp).padding(12.dp, 0.dp, 0.dp, 0.dp),
-                        imageLoader = imageLoader
-                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(0.dp, 12.dp, 0.dp, 0.dp)
+                            .height(64.dp)
+                            .width(64.dp)
+                            .border(1.dp, MaterialTheme.colorScheme.onBackground)
+                    ) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(todo.imgUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Todo Image",
+                            placeholder = painterResource(AppIcon.ic_image),
+                            error = painterResource(AppIcon.ic_broken_image),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
+                            imageLoader = imageLoader
+                        )
+                    }
                 }
             }
 

@@ -23,6 +23,7 @@ class EditTodoViewModel @Inject constructor(
 ) : ListoViewModel() {
     val todo = mutableStateOf(Todo())
     val imageFile = mutableStateOf<File?>(null)
+    val isLoading = mutableStateOf(false)
 
     init {
         val todoId = savedStateHandle.get<String>(TODO_ID)
@@ -45,11 +46,18 @@ class EditTodoViewModel @Inject constructor(
         imageFile.value = newValue
     }
 
+    fun onImageRemove() {
+        imageFile.value = null
+        todo.value = todo.value.copy(imgUrl = "")
+    }
+
     suspend fun onDoneClick(popUpScreen: () -> Unit, context: Context) {
         var editedTodo = todo.value
+        isLoading.value = true
 
         if (editedTodo.title.isBlank()) {
-            SnackbarManager.showMessage(R.string.email_error)
+            SnackbarManager.showMessage(R.string.title_error)
+            isLoading.value = false
             return
         }
 
@@ -67,6 +75,7 @@ class EditTodoViewModel @Inject constructor(
                 )
             } catch (e: Error) {
                 SnackbarManager.showMessage(R.string.file_error)
+                isLoading.value = false
                 return
             }
         }
