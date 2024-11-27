@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -22,10 +21,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,6 +45,8 @@ import com.harisfi.listo.commons.ext.fieldModifier
 import com.harisfi.listo.models.Todo
 import com.harisfi.listo.screens.SharedViewModel
 import com.harisfi.listo.ui.theme.ListoTheme
+import kotlinx.coroutines.launch
+import java.io.File
 import com.harisfi.listo.R.drawable as AppIcon
 import com.harisfi.listo.R.string as AppText
 
@@ -57,16 +57,26 @@ fun EditTodoScreen(
     sharedViewModel: SharedViewModel,
     viewModel: EditTodoViewModel = hiltViewModel(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val todo by viewModel.todo
-    val imageUrl by sharedViewModel.imageUrl
+    val imageFile by sharedViewModel.imageFile
+    val context = LocalContext.current
+
+    val onDoneClick: () -> Unit = {
+        coroutineScope.launch {
+            viewModel.onDoneClick(popUpScreen, context)
+            sharedViewModel.setCapturedImageFile(null)
+        }
+    }
 
     EditTodoScreenContent(
         todo = todo,
-        imageUrl = imageUrl,
-        onDoneClick = { viewModel.onDoneClick(popUpScreen) },
+        imageFile = imageFile,
+        onDoneClick = onDoneClick,
         onTitleChange = viewModel::onTitleChange,
         onDescriptionChange = viewModel::onDescriptionChange,
-        onOpenCameraClick = { viewModel.onOpenCameraClick(openScreen) }
+        onOpenCameraClick = { viewModel.onOpenCameraClick(openScreen) },
+        onImageChange = viewModel::onImageChange
     )
 }
 
@@ -74,11 +84,12 @@ fun EditTodoScreen(
 fun EditTodoScreenContent(
     modifier: Modifier = Modifier,
     todo: Todo,
-    imageUrl: String,
+    imageFile: File?,
     onDoneClick: () -> Unit,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onOpenCameraClick: () -> Unit
+    onOpenCameraClick: () -> Unit,
+    onImageChange: (File) -> Unit
 ) {
     val imageLoader = LocalContext.current.imageLoader.newBuilder()
         .logger(DebugLogger())
@@ -133,61 +144,43 @@ fun EditTodoScreenContent(
         BasicField(AppText.title, todo.title, onTitleChange, fieldModifier)
         Textarea(AppText.description, todo.description, onDescriptionChange, fieldModifier)
 
-        BasicButton(AppText.open_camera, Modifier.basicButton()) {
-            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+        if (imageFile != null) {
+            onImageChange(imageFile)
         }
 
-//        AsyncImage(
-//            model = ImageRequest.Builder(LocalContext.current)
-//                .data("https://res.cloudinary.com/dsuxc1c2p/image/upload/v1732444905/awmpxcyz4py81_uu6ont.jpg")
-//                .crossfade(true)
-//                .build(),
-//            contentDescription = "Todo Image",
-//            placeholder = painterResource(AppIcon.ic_image),
-//            error = painterResource(AppIcon.ic_broken_image),
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .clip(RectangleShape)
-//                .fillMaxHeight()
-//                .fillMaxWidth()
-//                .padding(12.dp, 0.dp, 12.dp, 0.dp),
-//            imageLoader = imageLoader
-//        )
-
-        if (todo.imgUrl.isNotEmpty()) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(todo.imgUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Todo Image",
-                placeholder = painterResource(AppIcon.ic_image),
-                error = painterResource(AppIcon.ic_broken_image),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .clip(RectangleShape)
-                    .height(128.dp)
-                    .padding(12.dp, 0.dp, 0.dp, 0.dp),
-                imageLoader = imageLoader
-            )
-        }
-
-        if (imageUrl.isNotEmpty()) {
-            Column(
-                modifier = Modifier.padding(12.dp).height(64.dp).width(64.dp)
+        if (imageFile != null || todo.imgUrl.isNotEmpty()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Todo Image",
-                    placeholder = painterResource(AppIcon.ic_image),
-                    error = painterResource(AppIcon.ic_broken_image),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                    imageLoader = imageLoader
-                )
+                Column(
+                    modifier = Modifier.padding(12.dp).height(64.dp).width(64.dp)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(imageFile?.toURI()?.toString() ?: todo.imgUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Todo Image",
+                        placeholder = painterResource(AppIcon.ic_image),
+                        error = painterResource(AppIcon.ic_broken_image),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                        imageLoader = imageLoader
+                    )
+                }
+
+                Column {
+                    BasicButton(AppText.change_picture, Modifier.basicButton()) {
+                        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                    }
+                    BasicButton(AppText.remove_picture, Modifier.basicButton()) {
+                        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                    }
+                }
+            }
+        } else {
+            BasicButton(AppText.add_picture, Modifier.basicButton()) {
+                cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
             }
         }
     }
@@ -204,11 +197,12 @@ fun EditTodoScreenPreview() {
     ListoTheme {
         EditTodoScreenContent(
             todo = todo,
-            imageUrl = "url",
+            imageFile = null,
             onDoneClick = { },
             onTitleChange = { },
             onDescriptionChange = { },
-            onOpenCameraClick = { }
+            onOpenCameraClick = { },
+            onImageChange = { }
         )
     }
 }

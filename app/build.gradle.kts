@@ -87,4 +87,5 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle.v122)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
+    implementation(libs.cloudinary.android)
 }

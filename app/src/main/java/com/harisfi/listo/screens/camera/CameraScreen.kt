@@ -28,8 +28,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -54,11 +52,11 @@ fun CameraScreen(
         preview.surfaceProvider = previewView.surfaceProvider
     }
     CameraScreenContent(
-        previewView, context, imageCapture, cameraExecutor
-    ) { url ->
+        previewView, imageCapture, cameraExecutor
+    ) { file ->
         run {
             popUpScreen()
-            sharedViewModel.setCapturedImageUrl(url)
+            sharedViewModel.setCapturedImageFile(file)
         }
     }
 }
@@ -66,10 +64,9 @@ fun CameraScreen(
 @Composable
 fun CameraScreenContent(
     previewView: PreviewView,
-    context: Context,
     imageCapture: ImageCapture,
     cameraExecutor: Executor,
-    onImageCaptured: (String) -> Unit
+    onImageCaptured: (File) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(factory = { previewView }, modifier = Modifier.weight(1f))
@@ -77,11 +74,10 @@ fun CameraScreenContent(
         // Capture button
         Button(
             onClick = {
-                takePhoto(context, imageCapture, cameraExecutor) { imageUrl ->
-                    onImageCaptured(imageUrl)  // Return the image URL
+                takePhoto(imageCapture, cameraExecutor) { file ->
+                    onImageCaptured(file)
                 }
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
@@ -91,34 +87,27 @@ fun CameraScreenContent(
 }
 
 private fun takePhoto(
-    context: Context,
-    imageCapture: ImageCapture,
-    executor: Executor,
-    onImageSaved: (String) -> Unit
+    imageCapture: ImageCapture, executor: Executor, onImageSaved: (File) -> Unit
 ) {
-//    onImageSaved("abc")
-    val photoFile = File(
-        context.cacheDir,
-        SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg"
+    val photoFile = File.createTempFile(
+        SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()), ".jpg"
     )
-    Log.d("aaaaaaaaaaaaaaaaaaa", photoFile.toURI().toString())
 
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-    Log.d("bbbbbbbbbbbbbbbbbbb", photoFile.toURI().toString())
 
-    imageCapture.takePicture(
-        outputOptions,
-        executor,
-        object : ImageCapture.OnImageSavedCallback {
-            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                onImageSaved(photoFile.toURI().toString())  // Convert file to URL string
-            }
-
-            override fun onError(exception: ImageCaptureException) {
-                println("Image capture failed: ${exception.message}")
-            }
+    imageCapture.takePicture(outputOptions, executor, object : ImageCapture.OnImageSavedCallback {
+        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+            Log.d("ccccccccccccccccccccccccccccccc", photoFile.toURI().toString())
+            Log.d("ccccccccccccccccccccccccccccccc", photoFile.exists().toString())
+            val file = File(photoFile.toURI().toString())
+            Log.d("ccccccccccccccccccccccccccccccc", file.exists().toString())
+            onImageSaved(photoFile)
         }
-    )
+
+        override fun onError(exception: ImageCaptureException) {
+            println("Image capture failed: ${exception.message}")
+        }
+    })
 }
 
 private suspend fun Context.getCameraProvider(): ProcessCameraProvider =
