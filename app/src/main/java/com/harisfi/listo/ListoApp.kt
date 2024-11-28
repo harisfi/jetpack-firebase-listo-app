@@ -1,5 +1,6 @@
 package com.harisfi.listo
 
+import android.content.Context
 import android.content.res.Resources
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -75,10 +76,18 @@ fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    context: Context = LocalContext.current
 ) =
     remember(snackbarHostState, navController, snackbarManager, resources, coroutineScope) {
-        ListoAppState(snackbarHostState, navController, snackbarManager, resources, coroutineScope)
+        ListoAppState(
+            snackbarHostState,
+            navController,
+            snackbarManager,
+            resources,
+            coroutineScope,
+            context
+        )
     }
 
 @Composable

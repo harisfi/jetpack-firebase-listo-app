@@ -3,7 +3,6 @@ package com.harisfi.listo.models.services.impl
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
@@ -46,8 +45,6 @@ class StorageServiceImpl @Inject constructor(
                     .dataObjects()
             }
 
-    private val isMediaManagerInitialized = mutableStateOf(false)
-
     override suspend fun getTodo(todoId: String): Todo? =
         firestore.collection(TODO_COLLECTION).document(todoId).get().await().toObject()
 
@@ -71,15 +68,6 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun uploadImage(context: Context, uri: Uri): String =
         suspendCancellableCoroutine { continuation ->
-            val config = mutableMapOf<String, Any>()
-            config["cloud_name"] = Helper.getConfigValue(context, "cloud_name")!!
-            config["api_key"] = Helper.getConfigValue(context, "api_key")!!
-            config["api_secret"] = Helper.getConfigValue(context, "api_secret")!!
-            if (!isMediaManagerInitialized.value) {
-                MediaManager.init(context, config)
-                isMediaManagerInitialized.value = true
-            }
-
             val callback = object : UploadCallback {
                 override fun onStart(requestId: String) {
                     Log.d("Cloudinary", "Upload start")
